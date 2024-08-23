@@ -74,7 +74,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="http://127.0.0.1:8080/setting/upload/1"
+            action="/api/setting/upload/1"
             :default-file-list="login_list"
             list-type="image-card"
         >
@@ -85,7 +85,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="http://127.0.0.1:8080/setting/upload/2"
+            action="/api/setting/upload/2"
             :default-file-list="logo_list"
             list-type="image-card"
         >
@@ -96,7 +96,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="http://127.0.0.1:8080/setting/upload/3"
+            action="/api/setting/upload/3"
             :default-file-list="logo_small_list"
             list-type="image-card"
         >
@@ -107,7 +107,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="http://127.0.0.1:8080/setting/upload/4"
+            action="/api/setting/upload/4"
             :default-file-list="logo_text_black_list"
             list-type="image-card"
         >
@@ -118,7 +118,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="http://127.0.0.1:8080/setting/upload/5"
+            action="/api/setting/upload/5"
             :default-file-list="logo_text_white_list"
             list-type="image-card"
         >

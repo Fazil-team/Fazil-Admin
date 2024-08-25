@@ -12,7 +12,7 @@ const showModalRef = ref(false)
 const previewImageUrlRef = ref('')
 
 function handlePreview(file: UploadFileInfo) {
-  const { url } = file
+  const {url} = file
   previewImageUrlRef.value = url as string
   showModalRef.value = true
 }
@@ -31,39 +31,44 @@ definePageMeta({
   parent: '系统管理'
 });
 
-onMounted(()=>{
+onMounted(() => {
   show.value = false
-  let interval = setInterval(()=>{
-    if(set.value != undefined){
-      console.log('loginBgImg',set.value?.loginBgImg == '')
-      login_list.value = set.value?.loginBgImg == ''? []: [{
+  let interval = setInterval(() => {
+    if (set.value != undefined) {
+      console.log('loginBgImg', set.value?.loginBgImg == '')
+      login_list.value = set.value?.loginBgImg == '' ? [] : [{
         status: 'finished',
         url: set.value?.loginBgImg
       }]
-      logo_small_list.value =set.value?.logoSmall == ''? []:  [{
+      logo_small_list.value = set.value?.logoSmall == '' ? [] : [{
         status: 'finished',
         url: set.value?.logoSmall
       }]
-      logo_list.value =set.value?.logo == ''? []:  [{
+      logo_list.value = set.value?.logo == '' ? [] : [{
         status: 'finished',
         url: set.value?.logo
       }]
-      logo_text_black_list.value =set.value?.logoTextBlack == ''? []:  [{
+      logo_text_black_list.value = set.value?.logoTextBlack == '' ? [] : [{
         status: 'finished',
         url: set.value?.logoTextBlack
       }]
-      logo_text_white_list.value =set.value?.logoTextWhite == ''? []:  [{
+      logo_text_white_list.value = set.value?.logoTextWhite == '' ? [] : [{
         status: 'finished',
         url: set.value?.logoTextWhite
       }]
       show.value = true
       clearInterval(interval)
     }
-  },100)
+  }, 100)
 })
 
-import type { UploadFileInfo } from 'naive-ui'
+import type {UploadFileInfo} from 'naive-ui'
+import {baseURL} from "assets/config/network";
+import * as apis from './apis'
 
+const save = (data)=>{
+  apis.save_setting(data)
+}
 </script>
 
 <template>
@@ -74,7 +79,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="/api/setting/upload/1"
+            :action="`${baseURL}/setting/upload/1`"
             :default-file-list="login_list"
             list-type="image-card"
         >
@@ -85,7 +90,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="/api/setting/upload/2"
+            :action="`${baseURL}/setting/upload/2`"
             :default-file-list="logo_list"
             list-type="image-card"
         >
@@ -96,7 +101,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="/api/setting/upload/3"
+            :action="`${baseURL}/setting/upload/3`"
             :default-file-list="logo_small_list"
             list-type="image-card"
         >
@@ -107,7 +112,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="/api/setting/upload/4"
+            :action="`${baseURL}/setting/upload/4`"
             :default-file-list="logo_text_black_list"
             list-type="image-card"
         >
@@ -118,7 +123,7 @@ import type { UploadFileInfo } from 'naive-ui'
         <n-upload
             v-if="show"
             :max="1"
-            action="/api/setting/upload/5"
+            :action="`${baseURL}/setting/upload/5`"
             :default-file-list="logo_text_white_list"
             list-type="image-card"
         >
@@ -126,31 +131,32 @@ import type { UploadFileInfo } from 'naive-ui'
         </n-upload>
       </n-descriptions-item>
     </n-descriptions>
-    <n-divider />
+    <n-divider/>
     <n-descriptions label-placement="left" title="参数设置" bordered :column="1">
       <n-descriptions-item label-class="label" label="应用名称">
-        <n-input placeholder="请输入应用名称"></n-input>
+        <n-input v-model:value="set.title" placeholder="请输入应用名称"></n-input>
       </n-descriptions-item>
       <n-descriptions-item label-class="label" label="操作">
-        <n-button type="primary">保存</n-button>
+        <n-button type="primary" @click="save(set)">保存</n-button>
       </n-descriptions-item>
     </n-descriptions>
   </div>
 </template>
 
 <style scoped lang="scss">
-.box{
-  .upload_box{
+.box {
+  .upload_box {
     display: flex;
     justify-content: left;
     align-items: center;
-    :deep(.n-upload){
+
+    :deep(.n-upload) {
       width: auto;
     }
   }
 }
 
-:deep(.n-descriptions-table-header){
+:deep(.n-descriptions-table-header) {
   width: 200px;
 }
 </style>

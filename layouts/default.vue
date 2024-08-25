@@ -14,6 +14,7 @@ import {storeToRefs} from "pinia";
 import * as auth_api from '~/layouts/apis'
 import {CloseOutlined} from '@vicons/antd'
 import {creatWebSocket} from '@/assets/utils/websocket'
+import {wsURL} from "assets/config/network.js";
 
 const links = ref([])
 const user = storeToRefs(useUserStore()).user_info
@@ -98,6 +99,7 @@ const handleSelect = (key) => {
 
 const init = async () => {
   loading.value = true
+  console.log(useRuntimeConfig().public);
   if (process.client) {
     loadingBar.start()
     path.value = router.currentRoute.value.fullPath
@@ -122,7 +124,7 @@ const init = async () => {
 }
 
 const init_ws = async () => {
-  creatWebSocket(`/api/wsInterface/${user.value.token}`)
+  creatWebSocket(`${wsURL}/wsInterface/${user.value.token}`)
 }
 
 onMounted(async () => {
@@ -222,7 +224,7 @@ const change = (e) => {
                 <Bread/>
               </div>
               <div>
-                <swBtn @change="changeTheme"></swBtn>
+<!--                <swBtn @change="changeTheme"></swBtn>-->
               </div>
             </div>
           </n-layout-header>

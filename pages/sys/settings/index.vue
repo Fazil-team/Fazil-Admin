@@ -17,11 +17,11 @@ function handlePreview(file: UploadFileInfo) {
   showModalRef.value = true
 }
 
-const login_list = ref([])
-const logo_small_list = ref([])
-const logo_list = ref([])
-const logo_text_black_list = ref([])
-const logo_text_white_list = ref([])
+const login_list = ref()
+const logo_small_list = ref()
+const logo_list = ref()
+const logo_text_black_list = ref()
+const logo_text_white_list = ref()
 useHead({
   title: '致飞网盘-Admin｜系统设置',
 })
@@ -36,25 +36,25 @@ onMounted(() => {
   let interval = setInterval(() => {
     if (set.value != undefined) {
       console.log('loginBgImg', set.value?.loginBgImg == '')
-      login_list.value = set.value?.loginBgImg == '' ? [] : [{
+      login_list.value =[{
         status: 'finished',
-        url: set.value?.loginBgImg
+        url: `${baseURL}/common/resource/sys?user_id=1`
       }]
-      logo_small_list.value = set.value?.logoSmall == '' ? [] : [{
+      logo_small_list.value =[{
         status: 'finished',
-        url: set.value?.logoSmall
+        url: `${baseURL}/common/resource/sys?user_id=2`
       }]
-      logo_list.value = set.value?.logo == '' ? [] : [{
+      logo_list.value =[{
         status: 'finished',
-        url: set.value?.logo
+        url: `${baseURL}/common/resource/sys?user_id=3`
       }]
-      logo_text_black_list.value = set.value?.logoTextBlack == '' ? [] : [{
+      logo_text_black_list.value =[{
         status: 'finished',
-        url: set.value?.logoTextBlack
+        url: `${baseURL}/common/resource/sys?user_id=4`
       }]
-      logo_text_white_list.value = set.value?.logoTextWhite == '' ? [] : [{
+      logo_text_white_list.value = [{
         status: 'finished',
-        url: set.value?.logoTextWhite
+        url: `${baseURL}/common/resource/sys?user_id=5`
       }]
       show.value = true
       clearInterval(interval)
@@ -69,18 +69,25 @@ import * as apis from './apis'
 const save = (data)=>{
   apis.save_setting(data)
 }
+
 </script>
 
 <template>
   <div class="box">
-
     <n-descriptions label-placement="left" title="图像设置" bordered :column="1 ">
       <n-descriptions-item label-class="label" label="登录页图片">
         <n-upload
             v-if="show"
             :max="1"
             :action="`${baseURL}/setting/upload/1`"
-            :default-file-list="login_list"
+            :default-file-list="[
+                    {
+                      id: 'c',
+          name: '我是自带url的图片.png',
+          status: 'finished',
+          url: baseURL+`/common/resource/sys?user_id=1`
+                    }
+                ]"
             list-type="image-card"
         >
           点击上传
@@ -91,7 +98,14 @@ const save = (data)=>{
             v-if="show"
             :max="1"
             :action="`${baseURL}/setting/upload/2`"
-            :default-file-list="logo_list"
+            :default-file-list="[
+                    {
+                      id: 'c',
+          name: '我是自带url的图片.png',
+          status: 'finished',
+          url: baseURL+`/common/resource/sys?user_id=2`
+                    }
+                ]"
             list-type="image-card"
         >
           点击上传
@@ -102,7 +116,14 @@ const save = (data)=>{
             v-if="show"
             :max="1"
             :action="`${baseURL}/setting/upload/3`"
-            :default-file-list="logo_small_list"
+            :default-file-list="[
+                    {
+                      id: 'c',
+          name: '我是自带url的图片.png',
+          status: 'finished',
+          url: baseURL+`/common/resource/sys?user_id=3`
+                    }
+                ]"
             list-type="image-card"
         >
           点击上传
@@ -113,7 +134,14 @@ const save = (data)=>{
             v-if="show"
             :max="1"
             :action="`${baseURL}/setting/upload/4`"
-            :default-file-list="logo_text_black_list"
+            :default-file-list="[
+                    {
+                      id: 'c',
+          name: '我是自带url的图片.png',
+          status: 'finished',
+          url: baseURL+`/common/resource/sys?user_id=4`
+                    }
+                ]"
             list-type="image-card"
         >
           点击上传
@@ -124,7 +152,14 @@ const save = (data)=>{
             v-if="show"
             :max="1"
             :action="`${baseURL}/setting/upload/5`"
-            :default-file-list="logo_text_white_list"
+            :default-file-list="[
+                    {
+                      id: 'c',
+          name: '我是自带url的图片.png',
+          status: 'finished',
+          url: baseURL+`/common/resource/sys?user_id=5`
+                    }
+                ]"
             list-type="image-card"
         >
           点击上传

@@ -6,6 +6,7 @@ import {storeToRefs} from "pinia";
 import {useLoadingBar} from "naive-ui";
 import {reactive, type Ref} from "vue";
 import * as apis from './apis'
+import {baseURL} from "assets/config/network";
 
 const loadingBar = useLoadingBar();
 loadingBar.finish()
@@ -13,7 +14,7 @@ const layout = storeToRefs(useLayoutStore()).layout
 const user = storeToRefs(useUserStore()).user_info
 const sys_setting:Ref<Setting | any>  = storeToRefs(useSettingStore()).setting
 
-const bg = `url("${sys_setting.value?.loginBgImg}")`
+const bg = `url("${baseURL}/common/resource/sys?user_id=1")`
 
 const formdata = reactive({
   username: '',
@@ -32,7 +33,7 @@ const login = ()=>{
   <div class="login-box">
       <div class="login-panel">
         <div style="display: flex;justify-content: center;margin: 1rem 0">
-          <img :src="sys_setting.logo" width="200" alt="">
+          <img :src="baseURL+'/common/resource/sys?user_id=2'" width="200" alt="">
         </div>
         <div class="title">登陆 - {{sys_setting.title}}｜管理端 </div>
         <div class="form">

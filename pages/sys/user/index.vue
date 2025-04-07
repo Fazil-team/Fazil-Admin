@@ -124,6 +124,9 @@ const init = () => {
     page_size: pagination.pageSize
   }).then(res => {
     tb_date.value = res.data.data.data
+    tb_date.value.forEach(e=>{
+      e.storage = e.storage/1024/1024/1024
+    })
     pagination.itemCount = res.data.data.total
     loading.value = false
     if (tb_date.value.length == 0 && pagination.page != 1) {

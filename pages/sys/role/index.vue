@@ -56,7 +56,7 @@ const columns = [
     }
   }
 ]
-const tb_data = ref([{}])
+const tb_data = ref([])
 const checkedRowKeys = ref([])
 const pagination = reactive({
     page: 1, //受控模式下的当前页
@@ -81,6 +81,7 @@ const pagination = reactive({
 });
 
 const init = ()=>{
+  loading.value = true
   height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 6rem - 10rem)`;
   apis.load_all_roles({
     current_page: pagination.page,
@@ -88,6 +89,7 @@ const init = ()=>{
   }).then(res=>{
     tb_data.value = res.data.data.data
     pagination.itemCount = res.data.data.total
+    loading.value = false
     if(tb_data.value.length == 0 && pagination.page != 1){
       pagination.page--;
       init()

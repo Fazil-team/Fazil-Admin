@@ -16,10 +16,12 @@
     "@vicons/ionicons5": "^0.12.0",
     "axios": "^1.7.5",
     "browser-md5-file": "^1.1.1",
+    "echarts": "^5.6.0",
     "js-file-download": "^0.4.12",
     "nuxt": "^3.12.2",
     "pinia": "^2.1.7",
-    "vue": "latest"
+    "vue": "latest",
+    "vue-echarts": "^7.0.3"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
   "devDependencies": {

@@ -60,3 +60,7 @@ export const gen_router_paths = async (arr) => {
     }
     return result
 }
+
+export const gen_charts_series = (...data)=>{
+    
+}

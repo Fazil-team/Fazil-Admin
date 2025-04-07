@@ -35,7 +35,7 @@ export const delete_user = (user_id) => {
 
 export const new_user = (data) => {
     return new Promise(r => {
-        service.post('/auth/register', data).then(res => {
+        service.post('/auth/new_user', data).then(res => {
             r(res)
         })
     })

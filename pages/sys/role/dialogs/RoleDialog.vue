@@ -95,10 +95,8 @@ const render = (opt) => {
 const handleSelect = (value) => {
   safe_mode.value = false
   selectedValues.value = value;
-  console.log('Selected Values:', value);
   // 获取选中的最底层元素
   const leaves = getSelectedLeaves(menus.value, value);
-  console.log('Selected Leaves:', leaves);
   let arr = []
   for (let i = 0; i < leaves.length; i++) {
     arr.push(leaves[i].id)

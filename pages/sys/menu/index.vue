@@ -8,9 +8,9 @@ import * as msg from '~/assets/utils/message'
 
 import * as icons from '~/assets/utils/icons'
 import {PlusOutlined} from "@vicons/antd";
+import MenuSys from "~/pages/sys/menu/components/MenuSys.vue";
 import {useHead} from "unhead";
 import {definePageMeta} from "#imports";
-import MenuSys from "~/pages/sys/menu/components/MenuSys.vue";
 
 useHead({
   title: '致飞网盘-Admin｜菜单管理',
@@ -26,6 +26,8 @@ function renderIcon(icon: Component) {
     size: '1.4rem'
   }, {default: () => h(icon)})
 }
+
+const loading = ref(false)
 
 const dialog = ref()
 
@@ -133,10 +135,12 @@ const rowKey = (row) => {
 
 const height = ref()
 const init = () => {
+  loading.value = true
   // 初始化高度querySelector
   height.value = `calc(100vh - ${document.querySelector(".n-card").clientHeight}px - 2rem - 6rem - 10rem)`;
   menu_apis.load_menus().then(res => {
     data.value = res.data.data
+    loading.value = false
   })
 }
 onMounted(() => {
@@ -161,6 +165,7 @@ onMounted(() => {
       <n-data-table
           :style="{ height: `${height}` }"
           flex-height
+          :loading="loading"
           :columns="columns"
           :data="data"
           :row-key="rowKey"

@@ -35,7 +35,6 @@ onMounted(() => {
   show.value = false
   let interval = setInterval(() => {
     if (set.value != undefined) {
-      console.log('loginBgImg', set.value?.loginBgImg == '')
       login_list.value =[{
         status: 'finished',
         url: `${baseURL}/common/resource/sys?user_id=1`
@@ -74,6 +73,24 @@ const save = (data)=>{
 
 <template>
   <div class="box">
+    <n-descriptions label-placement="left" title="参数设置" bordered :column="1">
+      <n-descriptions-item label-class="label" label="应用名称">
+        <n-input v-model:value="set.title" placeholder="请输入应用名称"></n-input>
+      </n-descriptions-item>
+      <n-descriptions-item label-class="label" label="注册方式(邮箱注册)">
+        <n-switch v-model:value="set.email_reg"></n-switch>
+      </n-descriptions-item>
+      <n-descriptions-item v-if="set.email_reg" label-class="label" label="邮箱地址">
+        <n-input v-model:value="set.email" placeholder="请输入邮箱地址"></n-input>
+      </n-descriptions-item>
+      <n-descriptions-item v-if="set.email_reg" label-class="label" label="密码">
+        <n-input v-model:value="set.emailpasswd" placeholder="请输入密码"></n-input>
+      </n-descriptions-item>
+      <n-descriptions-item label-class="label" label="操作">
+        <n-button type="primary" @click="save(set)">保存</n-button>
+      </n-descriptions-item>
+    </n-descriptions>
+    <n-divider/>
     <n-descriptions label-placement="left" title="图像设置" bordered :column="1 ">
       <n-descriptions-item label-class="label" label="登录页图片">
         <n-upload
@@ -166,15 +183,7 @@ const save = (data)=>{
         </n-upload>
       </n-descriptions-item>
     </n-descriptions>
-    <n-divider/>
-    <n-descriptions label-placement="left" title="参数设置" bordered :column="1">
-      <n-descriptions-item label-class="label" label="应用名称">
-        <n-input v-model:value="set.title" placeholder="请输入应用名称"></n-input>
-      </n-descriptions-item>
-      <n-descriptions-item label-class="label" label="操作">
-        <n-button type="primary" @click="save(set)">保存</n-button>
-      </n-descriptions-item>
-    </n-descriptions>
+
   </div>
 </template>
 

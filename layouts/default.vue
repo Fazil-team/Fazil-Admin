@@ -15,9 +15,14 @@ import * as auth_api from '~/layouts/apis'
 import {CloseOutlined} from '@vicons/antd'
 import {creatWebSocket} from '@/assets/utils/websocket'
 import {wsURL} from "assets/config/network.js";
+import VChart, {THEME_KEY} from 'vue-echarts'
+import { CheckmarkCircle, CloseCircle } from '@vicons/ionicons5'
+import {useSettingStore} from "~/store/UseSettingStore";
 
 const links = ref([])
 const user = storeToRefs(useUserStore()).user_info
+const sys_setting  = storeToRefs(useSettingStore()).setting
+
 const loading = ref(true)
 const router = useRouter();
 const path = ref()
@@ -56,6 +61,12 @@ const menuOptions = ref([])
 const collapsed = ref(false)
 let interval = ref()
 
+watch(()=>window.innerWidth, (value)=>{
+})
+
+watch(()=>collapsed.value, (value, oldValue, onCleanup)=>{
+  localStorage.setItem("colspan", value)
+})
 
 watch(() => router.currentRoute.value, () => {
   setTimeout(() => {
@@ -99,7 +110,6 @@ const handleSelect = (key) => {
 
 const init = async () => {
   loading.value = true
-  console.log(useRuntimeConfig().public);
   if (process.client) {
     loadingBar.start()
     path.value = router.currentRoute.value.fullPath
@@ -114,8 +124,14 @@ const init = async () => {
   interval.value = setInterval(() => {
     if (useOsTheme().value == 'dark') {
       dark.value = darkTheme
+      changeTheme({
+        mode: true
+      })
     } else {
       dark.value = undefined
+      changeTheme({
+        mode: false
+      })
     }
   }, 100)
   if (process.client) {
@@ -131,6 +147,14 @@ onMounted(async () => {
   $mount()
   await init()
   await init_ws()
+  setInterval(()=>{
+    let width = window.innerWidth
+    if(width < 768){
+      collapsed.value = true
+    }else {
+      collapsed.value = false
+    }
+  },100)
 })
 
 
@@ -142,7 +166,6 @@ const $mount = () => {
     set_item()
     let interval = setInterval(() => {
       var elementById = document.getElementById('space');
-      console.log(elementById)
       if (elementById != null) {
         clearInterval(interval)
         document.getElementById('space').addEventListener('wheel', (event) => {
@@ -161,7 +184,9 @@ const changeTheme = (mode) => {
   clearInterval(interval.value)
   if (mode.mode) {
     dark.value = darkTheme
+    localStorage.setItem("darkMode", 'dark')
   } else {
+    localStorage.setItem("darkMode", 'light')
     dark.value = undefined
   }
 }
@@ -224,7 +249,7 @@ const change = (e) => {
                 <Bread/>
               </div>
               <div>
-<!--                <swBtn @change="changeTheme"></swBtn>-->
+                <swBtn @change="changeTheme"></swBtn>
               </div>
             </div>
           </n-layout-header>
@@ -243,8 +268,25 @@ const change = (e) => {
                             style="height: calc(100vh - 9rem);display: flex;align-items: center;padding: 1rem 1rem;width: 100%;">
             <NuxtPage/>
           </n-layout-content>
-          <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 0 0 1rem">Powered
-            By Virus_Cui
+          <n-layout-footer bordered style="height: 3rem;display: flex;align-items: center;padding: 0 1rem 0 1rem;justify-content: space-between">
+            <div>
+              Powered
+              By Virus_Cui
+            </div>
+
+            <n-tag v-if="sys_setting?.register" round :bordered="false" type="success">
+              已注册
+              <template #icon>
+                <n-icon :component="CheckmarkCircle" />
+              </template>
+            </n-tag>
+
+            <n-tag v-else round :bordered="false" type="error">
+              未注册
+              <template #icon>
+                <n-icon :component="CloseCircle" />
+              </template>
+            </n-tag>
           </n-layout-footer>
         </n-layout>
       </n-layout>

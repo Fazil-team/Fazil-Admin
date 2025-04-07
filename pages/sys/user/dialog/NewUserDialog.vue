@@ -19,7 +19,8 @@ const dialog = reactive({
     userName: '',
     password: '',
     email: '',
-    role: null
+    role: null,
+    storage: 0
   },
   show: (data)=>{
     change(1)
@@ -57,6 +58,7 @@ const dialog = reactive({
         emits('success')
       })
     }else {
+      dialog.data.storage = dialog.data.storage*1024*1024*1024
       apis.change_user(dialog.data).then(res=>{
         dialog.close()
         emits('success')
@@ -95,6 +97,9 @@ const change = (a)=>{
         </n-form-item>
         <n-form-item label="邮箱">
           <n-input v-model:value="dialog.data.email" placeholder="请输入邮箱"></n-input>
+        </n-form-item>
+        <n-form-item label="存储空间（G）">
+          <n-input v-model:value.number="dialog.data.storage" placeholder="请输入存储空间"></n-input>
         </n-form-item>
         <n-form-item label="角色">
           <n-select  placeholder="请选择图标" clearable v-model:value="dialog.data.role" value-field="id" label-field="roleName"  :options="roles">

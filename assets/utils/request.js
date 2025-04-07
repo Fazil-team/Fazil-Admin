@@ -22,14 +22,14 @@ service.interceptors.response.use(
             storeToRefs(useLayoutStore()).layout.value = 'login'
         } else if (res.data?.code === 3) {
             msg.warn('权限不足')
-            navigateTo('/')
+            self.location = '/ui'
+            // navigateTo('/')
         } else if (res.data?.code === 200) {
             return res
         } else {
             msg.err(res.data.msg)
         }
     }, (err) => {
-        console.log('err',err.message)
         msg.err(err.message)
         Promise.reject(err)
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onMounted, h, type Component} from "vue";
+import {ref, reactive, onMounted, h, type Component, type Ref} from "vue";
 import NewMenuDialog from "~/pages/sys/menu/dialogs/NewMenuDialog.vue";
 import * as menu_apis from './apis'
 import {NButton, NIcon, NTag} from "naive-ui";
@@ -11,10 +11,17 @@ import {PlusOutlined} from "@vicons/antd";
 import MenuSys from "~/pages/sys/menu/components/MenuSys.vue";
 import {useHead} from "unhead";
 import {definePageMeta} from "#imports";
-
-useHead({
-  title: '致飞网盘-Admin｜菜单管理',
-})
+import {type Setting, useSettingStore} from "~/store/UseSettingStore";
+import {storeToRefs} from "pinia";
+const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
+let interval = setInterval(() => {
+  if(sys_setting.value.title){
+    useHead({
+      title: `${sys_setting.value.title} 管理后台｜ 菜单管理`,
+    })
+    clearInterval(interval)
+  }
+}, 100)
 
 definePageMeta({
   name: '菜单管理',

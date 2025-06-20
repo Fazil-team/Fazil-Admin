@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     app: {
         pageTransition: {name: 'page', mode: 'out-in'},
         head: {
-            title: '致飞网盘-Admin 1.0 '
+            title: 'Fazil 管理后台'
         },
         baseURL: '/admin'
     },

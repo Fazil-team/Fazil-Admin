@@ -18,7 +18,7 @@ export const gen_router_paths = async (arr) => {
         let element = arr[i];
         if (element.menuRouterPath != null) {
             if (element.icon != null) {
-                if(element.menuType != 'ACTIVE'){
+                if (element.menuType != 'ACTIVE') {
                     result.push({
                         label: element.menuType == 'ITEM' ? element.outline ? () => h(
                             'a', {
@@ -28,7 +28,7 @@ export const gen_router_paths = async (arr) => {
                             element.menuName
                         ) : () => h(NuxtLink, {
                             to: element.menuRouterPath
-                        }, element.menuName): element.menuName,
+                        }, element.menuName) : element.menuName,
                         key: element.menuRouterPath,
                         disabled: element.disable,
                         icon: element.icon != '' ? await asyncRenderIcon(element.icon) : null
@@ -44,7 +44,7 @@ export const gen_router_paths = async (arr) => {
                         element.menuName
                     ) : () => h(NuxtLink, {
                         to: element.menuRouterPath
-                    }, element.menuName): element.menuName,
+                    }, element.menuName) : element.menuName,
                     key: element.menuRouterPath,
                     disabled: element.disable
                 })
@@ -61,6 +61,25 @@ export const gen_router_paths = async (arr) => {
     return result
 }
 
-export const gen_charts_series = (...data)=>{
-    
+export const gen_charts_series = (...data) => {
+
+}
+
+const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
+
+/**
+ * 自动转换存储单位
+ * @param {number} bytes - 字节数（最小单位为字节）
+ * @param {number} decimals - 小数保留位数，默认 2 位
+ * @returns {string} 格式化后的字符串，例如 "1.23 MB"
+ */
+export const format = (bytes, decimals = 2) => {
+    if (isNaN(bytes) || bytes <= 0) return '0 B';
+
+    const base = 1024;
+    const i = Math.floor(Math.log(bytes) / Math.log(base));
+    const value = bytes / Math.pow(base, i);
+    const rounded = parseFloat(value.toFixed(decimals));
+
+    return `${rounded} ${UNITS[i]}`;
 }

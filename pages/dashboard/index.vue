@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onMounted} from "vue";
+import {ref, reactive, onMounted, type Ref} from "vue";
 import {useHead} from "unhead";
 import {definePageMeta} from "#imports";
 import NumCard from "~/components/NumCard.vue";
@@ -23,6 +23,9 @@ import {
   ToolboxComponent,
     DataZoomComponent
 } from 'echarts/components'
+import {type Setting, useSettingStore} from "~/store/UseSettingStore";
+import {storeToRefs} from "pinia";
+import {format} from "assets/utils/utils";
 
 
 // 注册引入的组件
@@ -50,47 +53,15 @@ const user_info = reactive({
   }
 })
 
-const data = [
-  {
-    name: 'Email',
-    type: 'line',
-    stack: 'Total',
-    data: [120, 132, 101, 134, 90, 230, 210],
-    areaStyle: {}
-  },
-  {
-    name: 'Union Ads',
-    type: 'line',
-    stack: 'Total',
-    data: [220, 182, 191, 234, 290, 330, 310],
-    areaStyle: {}
-  },
-  {
-    name: 'Video Ads',
-    type: 'line',
-    stack: 'Total',
-    data: [150, 232, 201, 154, 190, 330, 410],
-    areaStyle: {}
-  },
-  {
-    name: 'Direct',
-    type: 'line',
-    stack: 'Total',
-    data: [320, 332, 301, 334, 390, 330, 320],
-    areaStyle: {}
-  },
-  {
-    name: 'Search Engine',
-    type: 'line',
-    stack: 'Total',
-    data: [820, 932, 901, 934, 1290, 1330, 1320],
-    areaStyle: {}
+const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
+let interval = setInterval(() => {
+  if(sys_setting.value.title){
+    useHead({
+      title: `${sys_setting.value.title} 管理后台｜ 仪表板`,
+    })
+    clearInterval(interval)
   }
-]
-
-useHead({
-  title: '致飞网盘-Admin｜仪表板',
-})
+}, 100)
 
 definePageMeta({
   name: '仪表板',
@@ -137,7 +108,7 @@ onMounted(async() => {
     // 单位（b）
 
     for (let i = 0; i < res.data.data.data.length; i++) {
-      flux.all+=(res.data.data.data[i]/1024/1024)
+      flux.all+=(res.data.data.data[i])
       flux.datas.push((res.data.data.data[i]/1024/1024).toFixed(3))
       if(i > res.data.data.data.length - 25){
         flux.datas_small.push((res.data.data.data[i]/1024/1024).toFixed(3))
@@ -168,7 +139,7 @@ const charts_type = ref("visit")
                       :times="user_info.chart_data.times"/>
           <NumCardBar color="#e25d3d" v-if="show" title="下载文件数" :contant="0" :data="[]"
                       :times="[]"/>
-          <NumCardBar color="#a8449d" v-if="show" title="流量(MB)" :contant="(flux.all).toFixed(2)+' MB'" :data="flux.datas_small"
+          <NumCardBar color="#a8449d" v-if="show" title="流量(MB)" :contant="format(flux.all | 0)" :data="flux.datas_small"
                       :times="flux.times_small"/>
         </div>
         <div style="margin: 1rem 0 0 0">
@@ -181,12 +152,12 @@ const charts_type = ref("visit")
                 <n-radio-button value="flux">
                   流量
                 </n-radio-button>
-                <n-radio-button value="sys">
-                  注册量
-                </n-radio-button>
-                <n-radio-button value="download">
-                  下载量
-                </n-radio-button>
+<!--                <n-radio-button value="sys">-->
+<!--                  注册量-->
+<!--                </n-radio-button>-->
+<!--                <n-radio-button value="download">-->
+<!--                  下载量-->
+<!--                </n-radio-button>-->
               </n-radio-group>
             </template>
             <!-- 客户端组件 -->

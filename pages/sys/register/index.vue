@@ -4,12 +4,19 @@ import {definePageMeta} from "#imports";
 import type {Ref} from "vue";
 import {type Setting, useSettingStore} from "~/store/UseSettingStore";
 import {storeToRefs} from "pinia";
-const sys_setting:Ref<Setting | any>  = storeToRefs(useSettingStore()).setting
 import {check} from "~/pages/sys/register/apis";
 
-useHead({
-  title: '致飞网盘-Admin｜软件注册',
-})
+const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
+let interval = setInterval(() => {
+  if(sys_setting.value.title){
+    useHead({
+      title: `${sys_setting.value.title} 管理后台｜ 软件注册`,
+    })
+    clearInterval(interval)
+  }
+}, 100)
+
+
 
 definePageMeta({
   name: '软件注册',
@@ -23,8 +30,8 @@ const customRequest = (file,
                        action,
                        onFinish,
                        onError,
-                       onProgress)=>{
-  check(file).then(res=>{
+                       onProgress) => {
+  check(file).then(res => {
     console.log(res)
   })
 }

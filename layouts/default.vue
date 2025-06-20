@@ -229,7 +229,7 @@ const change = (e) => {
               <div v-if="!collapsed" style="display: flex;justify-content: left;align-items: center;width: 100%">
                 <div style="margin: 0 1rem">
                   <n-dropdown trigger="hover" :options="options" @select="handleSelect">
-                    <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+                    <n-avatar>Admin</n-avatar>
                   </n-dropdown>
                 </div>
                 <div>
@@ -237,7 +237,7 @@ const change = (e) => {
                 </div>
               </div>
               <div v-else style="margin-left: 1rem">
-                <n-avatar src="https://q1.qlogo.cn/g?b=qq&nk=2437916756&s=640"></n-avatar>
+                <n-avatar>Admin</n-avatar>
               </div>
             </div>
           </div>

@@ -17,6 +17,7 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
     (res) => {
+        console.log(res.data.code)
         if (res.data?.code === 2) {
             msg.err(res.data.msg)
             storeToRefs(useLayoutStore()).layout.value = 'login'
@@ -28,6 +29,7 @@ service.interceptors.response.use(
             return res
         } else {
             msg.err(res.data.msg)
+            Promise.reject(err)
         }
     }, (err) => {
         msg.err(err.message)

@@ -8,13 +8,18 @@ import {PlusOutlined} from "@vicons/antd";
 import {useHead} from "unhead";
 import {useUserStore} from "~/store/UseUserStore";
 import {storeToRefs} from "pinia";
+import {type Setting, useSettingStore} from "~/store/UseSettingStore";
 
 const user = storeToRefs(useUserStore()).user_info
-
-useHead({
-  title: '致飞网盘-Admin｜用户管理',
-})
-
+const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
+let interval = setInterval(() => {
+  if(sys_setting.value.title){
+    useHead({
+      title: `${sys_setting.value.title} 管理后台｜ 用户管理`,
+    })
+    clearInterval(interval)
+  }
+}, 100)
 definePageMeta({
   name: '用户管理',
   parent: '系统管理'

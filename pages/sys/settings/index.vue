@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted} from "vue";
 import {definePageMeta} from "#imports";
 import {useHead} from "unhead";
-import {useSettingStore} from "~/store/UseSettingStore";
+import {type Setting, useSettingStore} from "~/store/UseSettingStore";
 import {storeToRefs} from "pinia";
 
 const show = ref(false)
@@ -22,9 +22,15 @@ const logo_small_list = ref()
 const logo_list = ref()
 const logo_text_black_list = ref()
 const logo_text_white_list = ref()
-useHead({
-  title: '致飞网盘-Admin｜系统设置',
-})
+const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
+let interval = setInterval(() => {
+  if(sys_setting.value.title){
+    useHead({
+      title: `${sys_setting.value.title} 管理后台｜ 系统设置`,
+    })
+    clearInterval(interval)
+  }
+}, 100)
 
 definePageMeta({
   name: '系统设置',
@@ -35,27 +41,27 @@ onMounted(() => {
   show.value = false
   let interval = setInterval(() => {
     if (set.value != undefined) {
-      login_list.value =[{
+      console.log(123)
+      login_list.value = [{
+        id: 'c',
+        name: 'a.png',
         status: 'finished',
         url: `${baseURL}/common/resource/sys?user_id=1`
       }]
-      logo_small_list.value =[{
+      logo_small_list.value = [{
+        id: 'c',
+        name: 'a.png',
         status: 'finished',
         url: `${baseURL}/common/resource/sys?user_id=2`
       }]
-      logo_list.value =[{
+      logo_list.value = [{
+        id: 'c',
+        name: 'a.png',
         status: 'finished',
         url: `${baseURL}/common/resource/sys?user_id=3`
       }]
-      logo_text_black_list.value =[{
-        status: 'finished',
-        url: `${baseURL}/common/resource/sys?user_id=4`
-      }]
-      logo_text_white_list.value = [{
-        status: 'finished',
-        url: `${baseURL}/common/resource/sys?user_id=5`
-      }]
       show.value = true
+      console.log(login_list.value)
       clearInterval(interval)
     }
   }, 100)
@@ -64,8 +70,10 @@ onMounted(() => {
 import type {UploadFileInfo} from 'naive-ui'
 import {baseURL} from "assets/config/network";
 import * as apis from './apis'
+import ComponentsCard from "~/pages/sys/settings/components/components-card.vue";
+import ComponentsCardAdd from "~/pages/sys/settings/components/components-card-add.vue";
 
-const save = (data)=>{
+const save = (data) => {
   apis.save_setting(data)
 }
 
@@ -73,116 +81,94 @@ const save = (data)=>{
 
 <template>
   <div class="box">
-    <n-descriptions label-placement="left" title="参数设置" bordered :column="1">
-      <n-descriptions-item label-class="label" label="应用名称">
-        <n-input v-model:value="set.title" placeholder="请输入应用名称"></n-input>
-      </n-descriptions-item>
-      <n-descriptions-item label-class="label" label="注册方式(邮箱注册)">
-        <n-switch v-model:value="set.email_reg"></n-switch>
-      </n-descriptions-item>
-      <n-descriptions-item v-if="set.email_reg" label-class="label" label="邮箱地址">
-        <n-input v-model:value="set.email" placeholder="请输入邮箱地址"></n-input>
-      </n-descriptions-item>
-      <n-descriptions-item v-if="set.email_reg" label-class="label" label="密码">
-        <n-input v-model:value="set.emailpasswd" placeholder="请输入密码"></n-input>
-      </n-descriptions-item>
-      <n-descriptions-item label-class="label" label="操作">
-        <n-button type="primary" @click="save(set)">保存</n-button>
-      </n-descriptions-item>
-    </n-descriptions>
-    <n-divider/>
-    <n-descriptions label-placement="left" title="图像设置" bordered :column="1 ">
-      <n-descriptions-item label-class="label" label="登录页图片">
-        <n-upload
-            v-if="show"
-            :max="1"
-            :action="`${baseURL}/setting/upload/1`"
-            :default-file-list="[
-                    {
-                      id: 'c',
-          name: '我是自带url的图片.png',
-          status: 'finished',
-          url: baseURL+`/common/resource/sys?user_id=1`
-                    }
-                ]"
-            list-type="image-card"
-        >
-          点击上传
-        </n-upload>
-      </n-descriptions-item>
-      <n-descriptions-item label="logo设置">
-        <n-upload
-            v-if="show"
-            :max="1"
-            :action="`${baseURL}/setting/upload/2`"
-            :default-file-list="[
-                    {
-                      id: 'c',
-          name: '我是自带url的图片.png',
-          status: 'finished',
-          url: baseURL+`/common/resource/sys?user_id=2`
-                    }
-                ]"
-            list-type="image-card"
-        >
-          点击上传
-        </n-upload>
-      </n-descriptions-item>
-      <n-descriptions-item label="icon设置">
-        <n-upload
-            v-if="show"
-            :max="1"
-            :action="`${baseURL}/setting/upload/3`"
-            :default-file-list="[
-                    {
-                      id: 'c',
-          name: '我是自带url的图片.png',
-          status: 'finished',
-          url: baseURL+`/common/resource/sys?user_id=3`
-                    }
-                ]"
-            list-type="image-card"
-        >
-          点击上传
-        </n-upload>
-      </n-descriptions-item>
-      <n-descriptions-item label="黑色文字logo">
-        <n-upload
-            v-if="show"
-            :max="1"
-            :action="`${baseURL}/setting/upload/4`"
-            :default-file-list="[
-                    {
-                      id: 'c',
-          name: '我是自带url的图片.png',
-          status: 'finished',
-          url: baseURL+`/common/resource/sys?user_id=4`
-                    }
-                ]"
-            list-type="image-card"
-        >
-          点击上传
-        </n-upload>
-      </n-descriptions-item>
-      <n-descriptions-item label="白色文字logo">
-        <n-upload
-            v-if="show"
-            :max="1"
-            :action="`${baseURL}/setting/upload/5`"
-            :default-file-list="[
-                    {
-                      id: 'c',
-          name: '我是自带url的图片.png',
-          status: 'finished',
-          url: baseURL+`/common/resource/sys?user_id=5`
-                    }
-                ]"
-            list-type="image-card"
-        >
-          点击上传
-        </n-upload>
-      </n-descriptions-item>
-    </n-descriptions>
+    <n-tabs type="line" animated>
+      <n-tab-pane name="basic" tab="基础参数">
+        <n-descriptions label-placement="left" title="参数设置" bordered :column="1">
+          <n-descriptions-item label-class="label" label="应用名称">
+            <n-input v-model:value="set.title" placeholder="请输入应用名称"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="SMTP地址">
+            <n-input v-model:value="set.smtpHost" placeholder="请输入SMTP地址"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="SMTP端口">
+            <n-input v-model:value="set.smtpPort" placeholder="请输入SMTP端口"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="SMTP账号">
+            <n-input v-model:value="set.smtpEmail" placeholder="请输入邮箱账号"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="SMTP密码">
+            <n-input v-model:value="set.smtpPassword" placeholder="请输入SMTP密码"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="邮件模版">
+            <n-alert style="margin-bottom: 1rem;" type="warning" title="提示">
+              变量<br>
+              #email_code - 邮箱验证码 <br>
+              #title - 应用名称
+            </n-alert>
+            <n-input rows="30" v-model:value="set.smtpPattern" type="textarea" placeholder="请输入注册邮件内容"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="ICP备案号">
+            <n-input v-model:value="set.icp" placeholder="请输入ICP备案号"></n-input>
+          </n-descriptions-item>
+          <n-descriptions-item label-class="label" label="操作">
+            <n-button type="primary" @click="save(set)">保存</n-button>
+          </n-descriptions-item>
+        </n-descriptions>
+        <n-divider/>
+        <n-descriptions label-placement="left" title="图像设置" bordered :column="1 ">
+          <n-descriptions-item label-class="label" label="登录页图片">
+            <n-upload
+                v-if="show"
+                :max="1"
+                :action="`${baseURL}/setting/upload/1`"
+                :default-file-list="login_list"
+                list-type="image-card"
+            >
+              点击上传
+            </n-upload>
+          </n-descriptions-item>
+          <n-descriptions-item label="logo设置">
+            <n-upload
+                v-if="show"
+                :max="1"
+                :action="`${baseURL}/setting/upload/2`"
+                :default-file-list="logo_small_list"
+                list-type="image-card"
+            >
+              点击上传
+            </n-upload>
+          </n-descriptions-item>
+          <n-descriptions-item label="图标设置（favicon）">
+            <n-upload
+                v-if="show"
+                :max="1"
+                :action="`${baseURL}/setting/upload/3`"
+                :default-file-list="logo_list"
+                list-type="image-card"
+            >
+              点击上传
+            </n-upload>
+          </n-descriptions-item>
+        </n-descriptions>
+      </n-tab-pane>
+      <n-tab-pane name="code" tab="首页模版">
+        <n-alert title="注意" type="warning">
+          自行开发首页模版 请使用Hash类型路由
+        </n-alert>
+        <div style="margin-top: 1rem;">
+          <n-grid x-gap="10" y-gap="10" cols="2 s:2 m:3 l:4 xl:5 2xl:6" responsive="screen">
+            <n-grid-item v-for="item in 1">
+              <components-card/>
+            </n-grid-item>
+            <n-grid-item>
+              <components-card-add/>
+            </n-grid-item>
+          </n-grid>
+        </div>
+
+      </n-tab-pane>
+    </n-tabs>
+
 
   </div>
 </template>
@@ -203,4 +189,6 @@ const save = (data)=>{
 :deep(.n-descriptions-table-header) {
   width: 200px;
 }
+
+
 </style>

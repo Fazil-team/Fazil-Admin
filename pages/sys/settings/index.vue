@@ -97,7 +97,7 @@ const save = (data) => {
             <n-input v-model:value="set.smtpEmail" placeholder="请输入邮箱账号"></n-input>
           </n-descriptions-item>
           <n-descriptions-item label-class="label" label="SMTP密码">
-            <n-input v-model:value="set.smtpPassword" placeholder="请输入SMTP密码"></n-input>
+            <n-input type="password" v-model:value="set.smtpPassword" placeholder="请输入SMTP密码"></n-input>
           </n-descriptions-item>
           <n-descriptions-item label-class="label" label="邮件模版">
             <n-alert style="margin-bottom: 1rem;" type="warning" title="提示">

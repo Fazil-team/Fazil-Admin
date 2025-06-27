@@ -21,11 +21,13 @@ import {
   TooltipComponent,
   GridComponent,
   ToolboxComponent,
-    DataZoomComponent
+  DataZoomComponent
 } from 'echarts/components'
 import {type Setting, useSettingStore} from "~/store/UseSettingStore";
 import {storeToRefs} from "pinia";
 import {format} from "assets/utils/utils";
+import TwoNumCardBar from "~/components/TwoNumCard-bar.vue";
+import TwoCLineCharts from "~/components/TwoCLineCharts.vue";
 
 
 // 注册引入的组件
@@ -55,7 +57,7 @@ const user_info = reactive({
 
 const sys_setting: Ref<Setting | any> = storeToRefs(useSettingStore()).setting
 let interval = setInterval(() => {
-  if(sys_setting.value.title){
+  if (sys_setting.value.title) {
     useHead({
       title: `${sys_setting.value.title} 管理后台｜ 仪表板`,
     })
@@ -76,7 +78,7 @@ const api_used = reactive({
   datas_small: []
 })
 
-const flux = reactive({
+const upload_flux = reactive({
   all: 0.0,
   datas: [],
   times: [],
@@ -84,7 +86,15 @@ const flux = reactive({
   datas_small: []
 })
 
-onMounted(async() => {
+const download_flux = reactive({
+  all: 0.0,
+  datas: [],
+  times: [],
+  times_small: [],
+  datas_small: []
+})
+
+onMounted(async () => {
   await load_users_info().then(res => {
     user_info.total = res.data.data.user_count
     user_info.chart_data.dates = res.data.data.data.data
@@ -93,30 +103,41 @@ onMounted(async() => {
 
   })
 
-  await load_all_apis_count().then(res=>{
+  await load_all_apis_count().then(res => {
     api_used.datas = res.data.data.data
     api_used.times = res.data.data.time
     for (let i = 0; i < api_used.datas.length; i++) {
       api_used.all += api_used.datas[i]
-      if(i > api_used.datas.length - 25){
+      if (i > api_used.datas.length - 25) {
         api_used.datas_small.push(api_used.datas[i])
         api_used.times_small.push(api_used.times[i])
       }
     }
   })
-  await load_all_flux().then(res=>{
+  await load_all_flux().then(res => {
     // 单位（b）
-
-    for (let i = 0; i < res.data.data.data.length; i++) {
-      flux.all+=(res.data.data.data[i])
-      flux.datas.push((res.data.data.data[i]/1024/1024).toFixed(3))
-      if(i > res.data.data.data.length - 25){
-        flux.datas_small.push((res.data.data.data[i]/1024/1024).toFixed(3))
-        flux.times_small.push(res.data.data.time[i])
+    for (let i = 0; i < res.data.data.upload.data.length; i++) {
+      upload_flux.all += (res.data.data.upload.data[i])
+      upload_flux.datas.push((res.data.data.upload.data[i] / 1024 / 1024).toFixed(3))
+      if (i > res.data.data.upload.data.length - 25) {
+        upload_flux.datas_small.push((res.data.data.upload.data[i] / 1024 / 1024).toFixed(3))
+        upload_flux.times_small.push(res.data.data.upload.time[i])
       }
     }
 
-    flux.times = res.data.data.time
+    for (let i = 0; i < res.data.data.download.data.length; i++) {
+      upload_flux.all += (res.data.data.download.data[i])
+      download_flux.datas.push((res.data.data.download.data[i] / 1024 / 1024).toFixed(3))
+      if (i > res.data.data.download.data.length - 25) {
+        download_flux.datas_small.push((res.data.data.download.data[i] / 1024 / 1024).toFixed(3))
+        download_flux.times_small.push(res.data.data.download.time[i])
+      }
+    }
+
+    console.log(upload_flux, download_flux)
+
+    upload_flux.times = res.data.data.upload.time
+    download_flux.times = res.data.data.download.time
     console.log(res)
   })
 
@@ -133,14 +154,21 @@ const charts_type = ref("visit")
     <n-space vertical>
       <n-spin :show="!show">
         <div class="num-card-contianer">
-          <NumCardBar color="#6557ec" v-if="show" title="访问量" :contant="api_used.all+' 次'" :data="api_used.datas_small"
+          <NumCardBar color="#6557ec" v-if="show" title="访问量" :contant="api_used.all+' 次'"
+                      :data="api_used.datas_small"
                       :times="api_used.times_small"/>
-          <NumCardBar color="#60ac67" v-if="show" title="注册人数" :contant="user_info.total+ '人'" :data="user_info.chart_data.dates"
+          <NumCardBar color="#60ac67" v-if="show" title="注册人数" :contant="user_info.total+ '人'"
+                      :data="user_info.chart_data.dates"
                       :times="user_info.chart_data.times"/>
           <NumCardBar color="#e25d3d" v-if="show" title="下载文件数" :contant="0" :data="[]"
                       :times="[]"/>
-          <NumCardBar color="#a8449d" v-if="show" title="流量(MB)" :contant="format(flux.all | 0)" :data="flux.datas_small"
-                      :times="flux.times_small"/>
+          <TwoNumCardBar :color="['#a8449d' ,'#FFA500', '#2196F3']" v-if="show"
+                         :title="['总流量','上传流量(MB)','下载流量(MB)']" :contant="format(upload_flux.all | 0)"
+                         :data="[
+              upload_flux.datas_small,
+              download_flux.datas_small
+          ]"
+                         :times="upload_flux.times_small"/>
         </div>
         <div style="margin: 1rem 0 0 0">
           <n-card title="数据看板">
@@ -152,12 +180,12 @@ const charts_type = ref("visit")
                 <n-radio-button value="flux">
                   流量
                 </n-radio-button>
-<!--                <n-radio-button value="sys">-->
-<!--                  注册量-->
-<!--                </n-radio-button>-->
-<!--                <n-radio-button value="download">-->
-<!--                  下载量-->
-<!--                </n-radio-button>-->
+                <!--                <n-radio-button value="sys">-->
+                <!--                  注册量-->
+                <!--                </n-radio-button>-->
+                <!--                <n-radio-button value="download">-->
+                <!--                  下载量-->
+                <!--                </n-radio-button>-->
               </n-radio-group>
             </template>
             <!-- 客户端组件 -->
@@ -167,8 +195,12 @@ const charts_type = ref("visit")
                              :x-axis="api_used.times" :data="api_used.datas" title="接口调用频率"/>
               </div>
               <div v-if="charts_type === 'flux'" style="height: calc(100vh - 32rem);width: 100%">
-                <CLineCharts color="#a8449d" v-if="show" height="calc(100vh - 33rem)" width="100%"
-                             :x-axis="flux.times" :data="flux.datas" title="接口调用频率"/>
+                <TwoCLineCharts height="calc(100vh - 33rem)" width="100%" :color="['#a8449d' ,'#FFA500', '#2196F3']" v-if="show"
+                             :title="['总流量(MB)','上传流量(MB)','下载流量(MB)']"
+                             :contant="format(upload_flux.all | 0)" :data="[
+              upload_flux.datas_small,
+              download_flux.datas_small
+          ]" :times="upload_flux.times_small"/>
               </div>
             </ClientOnly>
           </n-card>

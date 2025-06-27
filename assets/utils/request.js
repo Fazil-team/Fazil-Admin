@@ -23,7 +23,8 @@ service.interceptors.response.use(
             storeToRefs(useLayoutStore()).layout.value = 'login'
         } else if (res.data?.code === 3) {
             msg.warn('权限不足')
-            self.location = '/ui'
+            Promise.reject(err)
+            // self.location = '/ui'
             // navigateTo('/')
         } else if (res.data?.code === 200) {
             return res

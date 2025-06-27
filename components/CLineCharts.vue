@@ -24,7 +24,6 @@ const option = ref({
     borderColor: 'transparent'
   },
   dataZoom: [
-
     {
       start: 60,
       end: 100
